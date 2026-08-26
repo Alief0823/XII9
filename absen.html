@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Absen - XII-9</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>ABSEN</h1>
+    <p>Konsekuensi XII-9</p>
+</header>
+
+<main>
+
+    <section class="welcome laporan-section">
+
+        <h2>👤 Pencatatan Absen</h2>
+
+        <form id="absenForm">
+
+            <div class="form-group">
+
+                <label for="nama">
+                    Nama Siswa
+                </label>
+
+                <input
+                    type="text"
+                    id="nama"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="kode">
+                    Kode
+                </label>
+
+                <input
+                    type="text"
+                    id="kode"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="keterangan">
+                    Keterangan
+                </label>
+
+                <textarea
+                    id="keterangan"
+                    rows="5"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-button"
+            >
+                SIMPAN ABSEN
+            </button>
+
+        </form>
+
+        <p
+            id="status"
+            class="form-status"
+        ></p>
+
+    </section>
+
+
+    <a href="admin.html" class="back-button">
+        ← Kembali
+    </a>
+
+</main>
+
+<script src="absen.js"></script>
+
+</body>
+
+</html>

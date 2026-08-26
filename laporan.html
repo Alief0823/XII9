@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Laporan Harian - XII-9</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>LAPORAN HARIAN</h1>
+    <p>XII-9 System</p>
+</header>
+
+<main>
+
+    <section class="welcome laporan-section">
+
+        <h2>📋 Laporan Harian</h2>
+
+        <p class="laporan-description">
+            Isi laporan kegiatan petugas sesuai bidang yang bertugas hari ini.
+        </p>
+
+        <form id="laporanForm">
+
+            <div class="form-group">
+
+                <label for="nama">
+                    Nama Petugas
+                </label>
+
+                <input
+                    type="text"
+                    id="nama"
+                    name="nama"
+                    placeholder="Masukkan nama petugas"
+                    autocomplete="name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="bidang">
+                    Bidang
+                </label>
+
+                <select
+                    id="bidang"
+                    name="bidang"
+                    required
+                >
+
+                    <option value="">
+                        Pilih bidang
+                    </option>
+
+                    <option value="Kebersihan">
+                        Kebersihan
+                    </option>
+
+                    <option value="Kedisiplinan">
+                        Kedisiplinan
+                    </option>
+
+                    <option value="Keamanan">
+                        Keamanan
+                    </option>
+
+                    <option value="Keindahan">
+                        Keindahan
+                    </option>
+
+                    <option value="Keagamaan">
+                        Keagamaan
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="tanggal">
+                    Tanggal
+                </label>
+
+                <input
+                    type="date"
+                    id="tanggal"
+                    name="tanggal"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="laporan">
+                    Laporan
+                </label>
+
+                <textarea
+                    id="laporan"
+                    name="laporan"
+                    rows="5"
+                    placeholder="Tuliskan kegiatan yang dilakukan..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="kendala">
+                    Kendala
+                </label>
+
+                <textarea
+                    id="kendala"
+                    name="kendala"
+                    rows="4"
+                    placeholder="Tuliskan kendala jika ada..."
+                ></textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-button"
+            >
+                KIRIM LAPORAN
+            </button>
+
+        </form>
+
+        <p
+            id="status"
+            class="form-status"
+        ></p>
+
+    </section>
+
+
+    <a
+        href="index.html"
+        class="back-button"
+    >
+        ← Kembali
+    </a>
+
+</main>
+
+
+<script src="laporan.js"></script>
+
+</body>
+
+</html>

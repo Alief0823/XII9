@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>XII-9 System</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>XII-9 SYSTEM</h1>
+        <p>Sistem Informasi Kelas XII-9</p>
+    </header>
+
+    <main>
+
+  
+
+        <h2>Selamat Datang 👋</h2>
+
+  <section class="welcome">
+
+    <h2>📢 Informasi Kelas</h2>
+
+    <div id="daftar-informasi"></div>
+
+    <div class="petugas-5k">
+
+        <div class="petugas-5k-header">
+            <h3>📋 Petugas 5K Hari Ini</h3>
+            <span id="hari-5k"></span>
+        </div>
+
+        <div id="petugas-5k">
+            <p>⏳ Memuat jadwal...</p>
+        </div>
+
+    </div>
+
+  </section>
+
+
+    <section class="menu">
+
+        <a href="informasi.html" class="menu-button">
+    <span>📢</span>
+    Informasi
+        </a>
+
+        <a href="peraturan.html" class="menu-button">
+    <span>📜</span>
+    Peraturan
+        </a>
+      
+    <a href="laporan.html" class="menu-button" id="laporanMenu">
+    <span>📋</span>
+    Laporan
+    </a>
+
+<a href="saran.html" class="menu-button">
+    <span>💬</span> Saran
+</a>
+
+      <a href="jadwal.html" class="menu-button">
+    <span>📅</span>
+    Jadwal
+      </a>
+
+      <a href="anggota.html" class="menu-button">
+    <span>👥</span>
+    Data Anggota
+      </a>
+
+    </section>
+
+    </main>
+
+<script>
+const laporanMenu = document.getElementById("laporanMenu");
+
+let timerAdmin = null;
+let adminLongPress = false;
+
+const KODE_ADMIN = "2308";
+
+
+function mulaiAdmin() {
+
+    adminLongPress = false;
+
+    timerAdmin = setTimeout(function () {
+
+        adminLongPress = true;
+
+        tampilkanLoginAdmin();
+
+    }, 5000);
+}
+
+
+function batalAdmin() {
+
+    if (timerAdmin !== null) {
+
+        clearTimeout(timerAdmin);
+
+        timerAdmin = null;
+
+    }
+}
+
+
+function tampilkanLoginAdmin() {
+
+    if (document.getElementById("adminLoginOverlay")) {
+        return;
+    }
+
+
+    const overlay = document.createElement("div");
+
+    overlay.id = "adminLoginOverlay";
+
+    overlay.innerHTML = `
+        <div class="admin-login-card">
+
+            <div class="admin-icon">
+                🔐
+            </div>
+
+            <h2>Admin XII-9</h2>
+
+            <p class="admin-subtitle">
+                Masukkan kode untuk membuka menu admin
+            </p>
+
+            <input
+                id="adminCodeInput"
+                type="password"
+                maxlength="4"
+                autocomplete="off"
+                placeholder="••••"
+            >
+
+            <p id="adminError"></p>
+
+            <div class="admin-buttons">
+
+                <button
+                    type="button"
+                    id="adminCancel"
+                >
+                    Batal
+                </button>
+
+                <button
+                    type="button"
+                    id="adminLogin"
+                >
+                    Masuk
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+
+    const input =
+        document.getElementById("adminCodeInput");
+
+    const login =
+        document.getElementById("adminLogin");
+
+    const cancel =
+        document.getElementById("adminCancel");
+
+    const error =
+        document.getElementById("adminError");
+
+
+    setTimeout(function () {
+        input.focus();
+    }, 50);
+
+
+    login.addEventListener("click", function () {
+
+        const kode =
+            input.value.trim().toUpperCase();
+
+
+        if (kode === KODE_ADMIN) {
+
+            overlay.remove();
+
+            tampilkanKonsekuensi();
+
+        } else {
+
+            error.textContent =
+                "Kode admin salah.";
+
+            input.value = "";
+
+            input.focus();
+
+        }
+
+    });
+
+
+    input.addEventListener("keydown", function (event) {
+
+        if (event.key === "Enter") {
+
+            login.click();
+
+        }
+
+    });
+
+
+    cancel.addEventListener("click", function () {
+
+        overlay.remove();
+
+        adminLongPress = false;
+
+    });
+
+}
+
+
+function tampilkanKonsekuensi() {
+
+    // Hapus semua menu konsekuensi yang mungkin tersisa
+    document.querySelectorAll(".konsekuensi-menu").forEach(function(menu) {
+        menu.remove();
+    });
+
+    const menu = document.createElement("a");
+
+    menu.className = "menu-button konsekuensi-menu";
+
+    menu.href = "admin.html";
+
+    menu.innerHTML = `
+        <span>⚠️</span>
+        Konsekuensi
+    `;
+
+    laporanMenu.parentNode.appendChild(menu);
+      }
+
+
+/* =========================
+   HP
+   ========================= */
+
+laporanMenu.addEventListener(
+    "touchstart",
+    mulaiAdmin
+);
+
+laporanMenu.addEventListener(
+    "touchend",
+    function () {
+        batalAdmin();
+    }
+);
+
+
+/* =========================
+   KOMPUTER
+   ========================= */
+
+laporanMenu.addEventListener(
+    "mousedown",
+    mulaiAdmin
+);
+
+laporanMenu.addEventListener(
+    "mouseup",
+    function () {
+        batalAdmin();
+    }
+);
+
+
+/* =========================
+   CEGAH LAPORAN
+   ========================= */
+
+laporanMenu.addEventListener(
+    "click",
+    function (event) {
+
+        if (adminLongPress) {
+
+            event.preventDefault();
+
+            adminLongPress = false;
+
+        }
+
+    }
+);
+
+      </script>
+  
+<script src="script.js"></script>
+  
+</body>
+
+</html>
