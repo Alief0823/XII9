@@ -6,88 +6,226 @@ const FORM_URL =
 const form = document.getElementById("konsekuensiForm");
 const statusText = document.getElementById("status");
 
-form.addEventListener("submit", function (event) {
 
-    event.preventDefault();
+// ================================
+// CEK ELEMEN
+// ================================
 
-    // Buat iframe tersembunyi
-    const iframe = document.createElement("iframe");
+if (!form) {
+    console.error("ERROR: #konsekuensiForm tidak ditemukan.");
+}
 
-    iframe.name = "konsekuensiGoogleFormFrame";
-    iframe.style.display = "none";
-
-    document.body.appendChild(iframe);
-
-
-    // Buat form pengiriman tersembunyi
-    const googleForm = document.createElement("form");
-
-    googleForm.method = "POST";
-    googleForm.action = FORM_URL;
-    googleForm.target = "konsekuensiGoogleFormFrame";
+if (!statusText) {
+    console.error("ERROR: #status tidak ditemukan.");
+}
 
 
-    // Fungsi menambahkan data
-    function addField(name, value) {
+// ================================
+// SUBMIT FORM
+// ================================
 
-        const input = document.createElement("input");
+if (form) {
 
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
+    form.addEventListener("submit", function (event) {
 
-        googleForm.appendChild(input);
-    }
+        event.preventDefault();
 
+        // Cegah submit ganda
+        if (form.dataset.sending === "true") {
+            console.warn("Pengiriman masih berlangsung.");
+            return;
+        }
 
-    // ABSEN
-    addField(
-        "entry.698979165",
-        document.getElementById("absen").value
-    );
-
-
-    // KODE
-    addField(
-        "entry.808717514",
-        document.getElementById("kode").value
-    );
+        form.dataset.sending = "true";
 
 
-    // CATATAN
-    addField(
-        "entry.879564375",
-        document.getElementById("catatan").value
-    );
+        // ================================
+        // AMBIL DATA TERLEBIH DAHULU
+        // ================================
+
+        const absen =
+            document.getElementById("absen").value.trim();
+
+        const kode =
+            document.getElementById("kode").value.trim();
+
+        const catatan =
+            document.getElementById("catatan").value.trim();
 
 
-    document.body.appendChild(googleForm);
-
-    statusText.textContent =
-        "⏳ Menyimpan...";
-
-
-    // Kirim ke Google Forms
-
-    console.log("Mengirim data:");
-console.log("Absen:", document.getElementById("absen").value);
-console.log("Kode:", document.getElementById("kode").value);
-console.log("Catatan:", document.getElementById("catatan").value);
-console.log("Form URL:", FORM_URL);
-    googleForm.submit();
+        console.log("================================");
+        console.log("DATA YANG AKAN DIKIRIM");
+        console.log("Absen   :", absen);
+        console.log("Kode    :", kode);
+        console.log("Catatan :", catatan);
+        console.log("================================");
 
 
-    // Beri waktu Google Forms menerima data
-    setTimeout(() => {
+        // ================================
+        // VALIDASI
+        // ================================
+
+        if (!absen || !kode || !catatan) {
+
+            statusText.textContent =
+                "⚠️ Semua data harus diisi.";
+
+            form.dataset.sending = "false";
+
+            return;
+        }
+
+
+        // ================================
+        // BUAT NAMA IFRAME UNIK
+        // ================================
+
+        const frameName =
+            "googleFormFrame_" + Date.now();
+
+
+        const iframe =
+            document.createElement("iframe");
+
+        iframe.name = frameName;
+        iframe.id = frameName;
+
+        iframe.style.position = "absolute";
+        iframe.style.width = "0";
+        iframe.style.height = "0";
+        iframe.style.border = "0";
+        iframe.style.visibility = "hidden";
+
+        document.body.appendChild(iframe);
+
+
+        // ================================
+        // BUAT FORM GOOGLE
+        // ================================
+
+        const googleForm =
+            document.createElement("form");
+
+        googleForm.method = "POST";
+        googleForm.action = FORM_URL;
+        googleForm.target = frameName;
+
+        googleForm.style.display = "none";
+
+
+        // ================================
+        // FUNGSI FIELD
+        // ================================
+
+        function addField(name, value) {
+
+            const input =
+                document.createElement("input");
+
+            input.type = "hidden";
+            input.name = name;
+            input.value = value;
+
+            googleForm.appendChild(input);
+        }
+
+
+        // ================================
+        // MASUKKAN DATA
+        // ================================
+
+        addField(
+            "entry.698979165",
+            absen
+        );
+
+        addField(
+            "entry.808717514",
+            kode
+        );
+
+        addField(
+            "entry.879564375",
+            catatan
+        );
+
+
+        // ================================
+        // PASANG FORM KE HALAMAN
+        // ================================
+
+        document.body.appendChild(googleForm);
+
 
         statusText.textContent =
-            "✅ Pencatatan berhasil disimpan.";
+            "⏳ Menyimpan data...";
 
-        form.reset();
 
-        googleForm.remove();
-        iframe.remove();
+        console.log("Mengirim POST ke Google Forms...");
+        console.log("URL:", FORM_URL);
+        console.log("Target iframe:", frameName);
 
-    }, 1500);
 
-});
+        // ================================
+        // SUBMIT
+        // ================================
+
+        try {
+
+            googleForm.submit();
+
+            console.log(
+                "POST Google Forms berhasil dipanggil."
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Gagal melakukan submit:",
+                error
+            );
+
+            statusText.textContent =
+                "❌ Gagal mengirim data.";
+
+            form.dataset.sending = "false";
+
+            googleForm.remove();
+            iframe.remove();
+
+            return;
+        }
+
+
+        // ================================
+        // SELESAI
+        // ================================
+
+        setTimeout(function () {
+
+            statusText.textContent =
+                "✅ Data berhasil dikirim.";
+
+            form.reset();
+
+            form.dataset.sending = "false";
+
+
+            // Bersihkan elemen sementara
+            setTimeout(function () {
+
+                googleForm.remove();
+                iframe.remove();
+
+            }, 500);
+
+
+            console.log(
+                "Proses pengiriman selesai."
+            );
+
+        }, 2000);
+
+    });
+
+}
