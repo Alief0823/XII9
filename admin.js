@@ -68,6 +68,12 @@ form.addEventListener("submit", function (event) {
 
 
     // Kirim ke Google Forms
+
+    console.log("Mengirim data:");
+console.log("Absen:", document.getElementById("absen").value);
+console.log("Kode:", document.getElementById("kode").value);
+console.log("Catatan:", document.getElementById("catatan").value);
+console.log("Form URL:", FORM_URL);
     googleForm.submit();
 
 
